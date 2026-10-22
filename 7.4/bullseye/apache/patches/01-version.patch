@@ -1,0 +1,35 @@
+diff --git a/configure b/configure
+index 6c2663c3..55677135 100755
+--- a/configure
++++ b/configure
+@@ -732,8 +732,8 @@ MAKEFLAGS=
+ # Identity of this package.
+ PACKAGE_NAME='PHP'
+ PACKAGE_TARNAME='php'
+-PACKAGE_VERSION='7.4.33'
+-PACKAGE_STRING='PHP 7.4.33'
++PACKAGE_VERSION='7.4.33-CVE-2026-109618-109619'
++PACKAGE_STRING='PHP 7.4.33-CVE-2026-109618-109619'
+ PACKAGE_BUGREPORT='https://bugs.php.net'
+ PACKAGE_URL='https://www.php.net'
+ 
+@@ -3825,7 +3825,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
+ 
+ 
+ ac_IFS=$IFS; IFS="."
+-set $(echo 7.4.33 | "${SED}" 's/\([0-9\.]*\)\(.*\)/\1\.\2/')
++set $(echo 7.4.33-CVE-2026-109618-109619 | "${SED}" 's/\([0-9\.]*\)\(.*\)/\1\.\2/')
+ IFS=$ac_IFS
+ PHP_MAJOR_VERSION=$1
+ PHP_MINOR_VERSION=$2
+diff --git a/main/php_version.h b/main/php_version.h
+index f2b90483..f9f5c2f2 100644
+--- a/main/php_version.h
++++ b/main/php_version.h
+@@ -4,5 +4,5 @@
+ #define PHP_MINOR_VERSION 4
+ #define PHP_RELEASE_VERSION 33
+ #define PHP_EXTRA_VERSION ""
+-#define PHP_VERSION "7.4.33"
++#define PHP_VERSION "7.4.33-CVE-2026-109618-109619"
+ #define PHP_VERSION_ID 70433

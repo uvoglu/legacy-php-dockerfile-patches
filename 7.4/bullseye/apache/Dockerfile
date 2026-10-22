@@ -15,6 +15,14 @@ RUN set -eux; \
 		echo 'Pin-Priority: -1'; \
 	} > /etc/apt/preferences.d/no-debian-php
 
+# BEGIN ADDED:
+RUN set -eux; \
+	{ \
+		echo 'deb http://archive.debian.org/debian bullseye main'; \
+		echo 'deb http://archive.debian.org/debian bullseye-updates main'; \
+		echo 'deb http://archive.debian.org/debian-security bullseye-security main'; \
+	} > /etc/apt/sources.list
+# :END ADDED
 # dependencies required for running "phpize"
 # (see persistent deps below)
 ENV PHPIZE_DEPS \
@@ -118,7 +126,7 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS 42670A7FE4D0441C8E4632349E4FDC074A4EF02D 5A52880781F755608BF815FC910DEB46F53EA312
 
-ENV PHP_VERSION 7.4.33
+ENV PHP_VERSION 7.4.33-CVE-2026-109618-109619
 ENV PHP_URL="https://www.php.net/distributions/php-7.4.33.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-7.4.33.tar.xz.asc"
 ENV PHP_SHA256="924846abf93bc613815c55dd3f5809377813ac62a9ec4eb3778675b82a27b927"
 
@@ -154,6 +162,9 @@ RUN set -eux; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
 COPY docker-php-source /usr/local/bin/
+# BEGIN ADDED:
+COPY patches/ /usr/local/src/php-patches/
+# :END ADDED
 
 RUN set -eux; \
 	\
@@ -179,6 +190,13 @@ RUN set -eux; \
 	; \
 	docker-php-source extract; \
 	cd /usr/src/php; \
+# BEGIN ADDED:
+	for patch in /usr/local/src/php-patches/*.diff /usr/local/src/php-patches/*.patch; do \
+		[ -e "$patch" ] || continue; \
+		echo "### applying backport patch: $patch"; \
+		patch -p1 --no-backup-if-mismatch --input="$patch"; \
+	done; \
+# :END ADDED
 	gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
 	debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
 # https://bugs.php.net/bug.php?id=74125
