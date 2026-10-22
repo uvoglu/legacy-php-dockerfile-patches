@@ -120,7 +120,7 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS 528995BFEDFBA7191D46839EF9BA0ADA31CBD89E 39B641343D8C104B2B146DC3F9C39DC0B9698544 F1F692238FBC1666E5A5CCD4199F9DFEF6FFBAFD
 
-ENV PHP_VERSION 8.1.34
+ENV PHP_VERSION 8.1.34-CVE-2026-109618-109619
 ENV PHP_URL="https://www.php.net/distributions/php-8.1.34.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.1.34.tar.xz.asc"
 ENV PHP_SHA256="ffa9e0982e82eeaea848f57687b425ed173aa278fe563001310ae2638db5c251"
 
@@ -154,6 +154,9 @@ RUN set -eux; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
 COPY docker-php-source /usr/local/bin/
+# BEGIN ADDED:
+COPY patches/ /usr/local/src/php-patches/
+# :END ADDED
 
 RUN set -eux; \
 	\
@@ -182,6 +185,13 @@ RUN set -eux; \
 	; \
 	docker-php-source extract; \
 	cd /usr/src/php; \
+# BEGIN ADDED:
+	for patch in /usr/local/src/php-patches/*.diff /usr/local/src/php-patches/*.patch; do \
+		[ -e "$patch" ] || continue; \
+		echo "### applying backport patch: $patch"; \
+		patch -p1 --no-backup-if-mismatch --input="$patch"; \
+	done; \
+# :END ADDED
 	gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
 	debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
 # https://bugs.php.net/bug.php?id=74125

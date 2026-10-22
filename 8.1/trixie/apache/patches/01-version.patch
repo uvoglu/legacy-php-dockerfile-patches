@@ -1,0 +1,35 @@
+diff --git a/configure b/configure
+index c8af7980..ef45c260 100755
+--- a/configure
++++ b/configure
+@@ -756,8 +756,8 @@ MAKEFLAGS=
+ # Identity of this package.
+ PACKAGE_NAME='PHP'
+ PACKAGE_TARNAME='php'
+-PACKAGE_VERSION='8.1.34'
+-PACKAGE_STRING='PHP 8.1.34'
++PACKAGE_VERSION='8.1.34-CVE-2026-109618-109619'
++PACKAGE_STRING='PHP 8.1.34-CVE-2026-109618-109619'
+ PACKAGE_BUGREPORT='https://github.com/php/php-src/issues'
+ PACKAGE_URL='https://www.php.net'
+ 
+@@ -4522,7 +4522,7 @@ ac_config_headers="$ac_config_headers main/php_config.h"
+ 
+ 
+ ac_IFS=$IFS; IFS="."
+-set $(echo 8.1.34 | "${SED}" 's/\([0-9\.]*\)\(.*\)/\1\.\2/')
++set $(echo 8.1.34-CVE-2026-109618-109619 | "${SED}" 's/\([0-9\.]*\)\(.*\)/\1\.\2/')
+ IFS=$ac_IFS
+ PHP_MAJOR_VERSION=$1
+ PHP_MINOR_VERSION=$2
+diff --git a/main/php_version.h b/main/php_version.h
+index 36a5619c..be9ac7e4 100644
+--- a/main/php_version.h
++++ b/main/php_version.h
+@@ -4,5 +4,5 @@
+ #define PHP_MINOR_VERSION 1
+ #define PHP_RELEASE_VERSION 34
+ #define PHP_EXTRA_VERSION ""
+-#define PHP_VERSION "8.1.34"
++#define PHP_VERSION "8.1.34-CVE-2026-109618-109619"
+ #define PHP_VERSION_ID 80134
